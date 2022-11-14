@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 1st December 2004), see www.w3.org">
+<title>rpcquota.app : Mac OSX Statusbar/Traybar NFS (RPC/rquotad) Filesystem Quota Check</title>
+</head>
+<body>
+<h1>rpcquota.app</h1> 
+<img style="float:right" src="quota.png" title="our great app icon" width=128 height=128>
+<h2>The (not-yet-just-another) MacOS X menubar/tray-item nfs/rpc quota checker</h2>
+<h3>What is it?</h3>
+<p>Yet a lot of beautiful tools exist to measure/monitor your private mac's <b>local</b> disk
+usage. As I was unable to google up anything that does the same thing (at least somehow)
+but for <b>remote</b> servers, ... Voila: rpcquota.app. It is intended to
+report the <a href="http://en.wikipedia.org/wiki/Disk_quota">disk quota</a> usage, as reported by <b>remote</b> <a href= "http://en.wikipedia.org/wiki/Network_File_System_(protocol)">NFS</a> servers, that are running the <a href= "http://en.wikipedia.org/wiki/Remote_procedure_call">RPC</a> service <a href="http://www.freebsd.org/cgi/man.cgi?query=rpc.rquotad">rquotad</a>.</p>
+
+<p>This tool is <b>useless</b> for the home user but interesting only for people
+
+having their <a href="http://en.wikipedia.org/wiki/Home_directory">home directory</a>
+sit e.g. on a Solaris NFS Server. Mac OSX currently (10.5 / Leopard) provides
+no mechanisms to make users aware of quotas configured on such rquotad enabled
+NFS servers. In Finder, users will get the partition's free space reported
+when looking in their homedirectory -- which will ever likely be much
+more than their active quotas. This might work better with BSD-Style
+quotas (i.e. mounting clientside e.g. from OSXServer), but simply is
+inexistant when rquotad is required.
+This tool tries to fill this gap. In three amazing colors.</p>
+<h3>How does it...?</h3>
+<p>I have the hope to keep it autoconfigureable -- as long as
+nobody complains, rpcquota.app will:</p>
+<ul>
+<li>walk through the system's list of mounts and</li>
+<li>try to match the nfs-type mounts against the user's homedir or</li>
+<li>try to match the nfs-type mount's basename against the username</li>
+</ul>
+If it found a valid mountpoint (i.e. one that it "thinks" of it is
+the user's nfs mounted homedirectoy), rpcquota.app will contact the nfs
+mount's server via rpc to retreive usage stats. If rpcquota.app did
+well so far, it will set the menu bar item color according to quota
+results. This is currently hardcoded (shame on) me: up to 90%:
+green, then orange, red if above 95%.
+<h3>What does it look like?</h3>
+<p>Not too beautiful, to be honest...</p>
+<img style="float:left; margin:1em" src="rpcquota-screenshot.png">
+<p>... but still more mac-like than doing it in a shell :-).<br>
+Besides the colors named above, gray background on the menu icon
+implies no (or bad) quota results. The Tooltip as well as the menu's
+first item will display user messages / quota immediately after launch,
+then re-scan every 60 minutes (which can be turned off).</p>
+<h3>How to...</h3>
+<p>
+Download and open the <a href="rpcquota.dmg">rpcquota.dmg (99kB) from here</a>,
+and drag-drop the app icon to a destination folder of your choice (e.g. /Applications).
+rpcquota.app comes as a universal binary, running on Mac OS X Tiger and greater.
+Add to your login items in User Preferences if desired. If you still think
+you might want to use this tool, but it does not work for you, please
+provide feedback/translations/flames by <a href="hackerj+rpcquota@ee.ethz.ch">mail</a>.
+Sources available sooner or later after cleanup or on request. Use rpcquota.app at your own
+risk!</p>
+<h3>Q & A</h3>
+<p><b>Q: How much does it cost?</b><br>
+A: The time to download and unpack. It's free. Simply not OSS (yet).
+<p><b>Q: What about ..... quota system support?</b><br>
+A: rpcquota.app supports <b>exclusively</b> RPC rquotad requests and
+is only tested against solaris servers. it does <b>not care at all</b>
+about any local disk, or even <a href="http://sial.org/howto/osx/quota/">
+os x native BSD quotas</a> to display space usage. No changes planned.
+</p>
+<p><b>Q: Which dependencies does rpcquota.app have?</b><br>
+A: It only relies on common system libs, no external things.
+</p>
+<p><b>Q: How do I tell which version I have installed?</b><br>
+A: This thing works ok for me, so I didn't release something "better" yet.
+Any future release will have a version info. Or a changelog. And stuff.
+</p>
+<p><b>Q: Bugs?</b><br>
+A: Oh yes, it currently leaks at least 30 bytes a hour. Fix by buying memory, log out at least once a year or bug me to improve. Err, well, yes -- and it does not bother the number of files limits reported by rquotad (yet).
+</p>
+<h2>References</h2>
+This app would have been impossible without <a href=
+"http://cpansearch.perl.org/src/TOMZO/Quota-1.6.3/Quota.xs">cpan's
+Quota.pm</a>, which provided some magic glue code to make rpc quota
+work (i.e. compile) on osx. Opensolaris' <a href=
+"http://src.opensolaris.org/source/raw/onnv/onnv-gate/usr/src/cmd/fs.d/ufs/quota/quota.c">
+quota.c</a> served us with its callaurpc function. Finally, the menu item
+initial jump was provided by this nice <a href=
+"http://th30z.netsons.org/2008/10/cocoa-system-statusbar-item-aka-traybar/">
+sample code for a traybar app</a>. 
+<hr>
+<i>(c) jan hacker. Last update: Feb 12 2009</i>
+</body>
+</html>
